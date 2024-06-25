@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:favourite_places/models/place.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
-import 'package:geocoding/geocoding.dart' as geolocation;
+import 'package:http/http.dart' as http;
 
 class LocationInput extends StatefulWidget {
-  const LocationInput({super.key});
+  const LocationInput({super.key, required this.onSelectLocation});
+
+  final void Function(PlaceLocation location) onSelectLocation;
 
   @override
   State<StatefulWidget> createState() {
@@ -63,21 +67,22 @@ class _LocationInputState extends State<LocationInput> {
       return;
     }
 
-    List<geolocation.Placemark> placemarks =
-        await geolocation.placemarkFromCoordinates(lat!, lon!);
+    final url = Uri.parse(
+        'https://api.geoapify.com/v1/geocode/reverse?lat=$lat&lon=$lon&apiKey=0809b027f7934f2eb5ba5f7ed7456f83');
 
-    String address = 'Cannot find address at the moment';
+    final res = await http.get(url);
 
-    if (placemarks.isNotEmpty) {
-      address =
-          '$placemarks[0].street!, $placemarks[0].locality, $placemarks[0].country';
-    }
+    final resData = json.decode(res.body);
+
+    final address = resData['features'][0]['properties']['formatted'];
 
     setState(() {
       _pickedLocation =
-          PlaceLocation(latitude: lat, longitude: lon, address: address);
+          PlaceLocation(latitude: lat!, longitude: lon!, address: address);
       _isGettingLocation = false;
     });
+
+    // widget.onSelectLocation(_pickedLocation!);
   }
 
   @override

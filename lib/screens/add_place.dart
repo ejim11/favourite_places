@@ -23,7 +23,9 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   void _addPlace() {
     final enteredText = _titleController.text;
 
-    if (enteredText.isEmpty || _selectedImage == null) {
+    if (enteredText.isEmpty ||
+        _selectedImage == null ||
+        _selectedLocation == null) {
       return;
     }
 
@@ -67,7 +69,11 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
               const SizedBox(
                 height: 16,
               ),
-              const LocationInput(),
+              LocationInput(
+                onSelectLocation: (PlaceLocation location) {
+                  _selectedLocation = location;
+                },
+              ),
               const SizedBox(
                 height: 16,
               ),
