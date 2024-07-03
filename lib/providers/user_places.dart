@@ -34,10 +34,11 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
 
   Future<void> loadPlaces() async {
     try {
+      // get the db
       final db = await _getDatabase();
-      final data = await db.query('user_places');
 
-      print(data);
+      // query the collection
+      final data = await db.query('user_places');
 
       final places = data
           .map(
@@ -54,6 +55,8 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
           )
           .toList();
 
+      // print(places[0].image.path);
+
       state = places;
     } catch (err) {
       print(err);
@@ -63,13 +66,28 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
   void addPlace(String title, File image, PlaceLocation location) async {
     // get the app doc directory
     final appDir = await syspaths.getApplicationDocumentsDirectory();
+    // print('app dir path');
+    // print(appDir.path);
+    // print(appDir.path.split('tmp'));
+
+    // print('image path');
+    // print(image.path);
     final filename = path.basename(image.path);
+    // print('filename');
+    // print(filename);
+
     final copiedImage = await image.copy('${appDir.path}/$filename');
+    // print('copied img');
+    // print(copiedImage);
+    // final fileLength = await copiedImage.length();
+    // print('File length: $fileLength bytes');
 
     final newPlace =
         Place(title: title, image: copiedImage, location: location);
 
     final db = await _getDatabase();
+
+    // print(newPlace.image.path);
 
 // insert the table with its table name and items into the db
     db.insert('user_places', {

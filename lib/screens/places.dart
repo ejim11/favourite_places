@@ -19,11 +19,13 @@ class _PlacesScreenState extends ConsumerState<PlacesListScreen> {
   @override
   void initState() {
     super.initState();
+    // load all the places stored in the db
     _placesFuture = ref.read(userPlacesProvider.notifier).loadPlaces();
   }
 
   @override
   Widget build(BuildContext context) {
+    // watching for any change in the user places state
     final userPlaces = ref.watch(userPlacesProvider);
 
     return Scaffold(

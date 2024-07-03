@@ -25,61 +25,61 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: GlobalKey(),
-        appBar: AppBar(
-            title: Text(
-                widget.isSelecting ? 'Pick your location' : 'Your location'),
-            actions: [
-              if (widget.isSelecting)
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(_pickedLocation);
-                  },
-                  icon: const Icon(Icons.save),
-                )
-            ]),
-        body: Stack(children: [
-          FlutterMap(
-            key: GlobalKey(),
-            mapController: MapController(),
-            options: MapOptions(
-                keepAlive: true,
-                onTap: !widget.isSelecting
-                    ? null
-                    : (TapPosition position, LatLng latLng) {
-                        setState(() {
-                          _pickedLocation = latLng;
-                        });
-                      },
-                initialCenter: LatLng(
-                    widget.location.latitude!, widget.location.longitude!),
-                initialZoom: 16),
-            children: [
-              TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'com.example.app',
-              ),
-              MarkerLayer(
-                markers: (_pickedLocation == null && widget.isSelecting)
-                    ? []
-                    : [
-                        Marker(
-                          point: _pickedLocation != null
-                              ? _pickedLocation!
-                              : LatLng(widget.location.latitude!,
-                                  widget.location.longitude!),
-                          width: 80,
-                          height: 80,
-                          child: const Icon(
-                            Icons.location_on,
-                            color: Colors.redAccent,
-                            size: 44,
-                          ),
-                        ),
-                      ],
+      appBar: AppBar(
+          title:
+              Text(widget.isSelecting ? 'Pick your location' : 'Your location'),
+          actions: [
+            if (widget.isSelecting)
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop(_pickedLocation);
+                },
+                icon: const Icon(Icons.save),
               )
-            ],
-          ),
-        ]));
+          ]),
+      body: Stack(children: [
+        FlutterMap(
+          key: GlobalKey(),
+          mapController: MapController(),
+          options: MapOptions(
+              keepAlive: true,
+              onTap: !widget.isSelecting
+                  ? null
+                  : (TapPosition position, LatLng latLng) {
+                      setState(() {
+                        _pickedLocation = latLng;
+                      });
+                    },
+              initialCenter:
+                  LatLng(widget.location.latitude!, widget.location.longitude!),
+              initialZoom: 16),
+          children: [
+            TileLayer(
+              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              userAgentPackageName: 'com.example.app',
+            ),
+            MarkerLayer(
+              markers: (_pickedLocation == null && widget.isSelecting)
+                  ? []
+                  : [
+                      Marker(
+                        point: _pickedLocation != null
+                            ? _pickedLocation!
+                            : LatLng(widget.location.latitude!,
+                                widget.location.longitude!),
+                        width: 80,
+                        height: 80,
+                        child: const Icon(
+                          Icons.location_on,
+                          color: Colors.redAccent,
+                          size: 44,
+                        ),
+                      ),
+                    ],
+            )
+          ],
+        ),
+      ]),
+    );
   }
 }

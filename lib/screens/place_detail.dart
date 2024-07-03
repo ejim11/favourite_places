@@ -17,6 +17,7 @@ class PlaceDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // print(place.image);
     return Scaffold(
       appBar: AppBar(
         title: Text(place.title),
